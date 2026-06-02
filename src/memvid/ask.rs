@@ -1353,7 +1353,7 @@ fn vector_hits(
                 request.scope.as_deref(),
                 request.acl_context.as_ref(),
                 request.acl_enforcement_mode,
-                request.vec_decay_half_life_secs,
+                None,
             )?;
             tracing::debug!(
                 "adaptive retrieval: {} -> {} results ({})",
@@ -1373,7 +1373,7 @@ fn vector_hits(
         request.scope.as_deref(),
         request.acl_context.as_ref(),
         request.acl_enforcement_mode,
-        request.vec_decay_half_life_secs,
+        None,
     )?;
 
     Ok(vec_response.hits)

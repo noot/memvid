@@ -235,7 +235,7 @@ pub(super) fn try_tantivy_search(
         // Sort by combined score (descending)
         with_scores.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal));
 
-        // Extract back to evaluated
+        // Extract back to evaluated6
         evaluated = with_scores.into_iter().map(|(_, item)| item).collect();
     }
 
