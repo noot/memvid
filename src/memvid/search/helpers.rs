@@ -404,6 +404,9 @@ pub(crate) fn attach_temporal_metadata(memvid: &mut Memvid, hits: &mut [SearchHi
 pub(super) const DEFAULT_DECAY_HALF_LIFE_SECS: f32 = 86400.0;
 
 pub(super) fn recency_boost(age_seconds: f32, half_life_secs: f32) -> f32 {
+    if !half_life_secs.is_finite() || half_life_secs <= 0.0 {
+        return 1.0;
+    }
     let decay_factor = 2.0_f32.ln() / half_life_secs;
     (-decay_factor * age_seconds).exp()
 }
@@ -583,5 +586,16 @@ mod tests {
             old_score_long > old_score_short,
             "longer half-life should penalize old hits less"
         );
+    }
+
+    #[test]
+    fn recency_boost_invalid_half_life_returns_neutral() {
+        for bad in [0.0, -1.0, f32::NAN, f32::INFINITY, f32::NEG_INFINITY] {
+            let boost = recency_boost(3600.0, bad);
+            assert!(
+                (boost - 1.0).abs() < f32::EPSILON,
+                "half_life={bad} should return neutral boost 1.0, got {boost}"
+            );
+        }
     }
 }

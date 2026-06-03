@@ -447,8 +447,9 @@ impl Memvid {
             ));
         }
 
-        let half_life =
-            decay_half_life_secs.unwrap_or(super::helpers::DEFAULT_DECAY_HALF_LIFE_SECS);
+        let half_life = decay_half_life_secs
+            .filter(|v| v.is_finite() && *v > 0.0)
+            .unwrap_or(super::helpers::DEFAULT_DECAY_HALF_LIFE_SECS);
         let mut hits = super::helpers::apply_recency_decay(candidates, half_life);
         hits.truncate(top_k);
 
